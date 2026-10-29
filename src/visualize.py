@@ -85,7 +85,7 @@ def plot_units_vs_revenue(df, out_dir: str) -> str:
 def plot_aov(aov_by_region_df, out_dir: str) -> str:
     fig, ax = plt.subplots(figsize=(7, 4.5))
     ax.bar(aov_by_region_df["region"], aov_by_region_df["aov"], color=PALETTE[0])
-    ax.set_title("Average Order Value by Region")
+    ax.set_title("Average Order Value by Region (revenue per transaction)")
     ax.set_xlabel("Region")
     ax.set_ylabel("AOV ($)")
     for i, v in enumerate(aov_by_region_df["aov"]):

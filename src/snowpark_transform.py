@@ -26,9 +26,7 @@ Pipeline performed here:
      to read.
 
 This script requires a live Snowflake account (see .env.example /
-SnowflakeConfig). It is not executed as part of this session since no
-Snowflake credentials are connected here -- run it from an environment
-where SNOWFLAKE_ACCOUNT/USER/PASSWORD are set.
+SnowflakeConfig) with SNOWFLAKE_ACCOUNT/USER/PASSWORD set.
 """
 
 import logging
@@ -45,7 +43,7 @@ logger = logging.getLogger("snowpark_transform")
 
 try:
     from snowflake.snowpark import Session
-    from snowflake.snowpark.functions import col, month, year, round as sp_round, sum as sp_sum, concat_ws, lit
+    from snowflake.snowpark.functions import col, month, year, round as sp_round, sum as sp_sum, count as sp_count, concat_ws, lit
     from snowflake.snowpark.exceptions import SnowparkSQLException
 except ImportError:  # pragma: no cover
     Session = None
@@ -188,14 +186,18 @@ def compute_metrics(session, curated_df) -> None:
         )
         units_vs_revenue.write.mode("overwrite").save_as_table("UNITS_VS_REVENUE")
 
-        # 5.5 Average Order Value (overall + by region)
+        # 5.5 Order value metrics (overall + by region). Two distinct measures:
+        #   AOV                  = revenue / number of transactions (per order)
+        #   AVG_REVENUE_PER_UNIT = revenue / units sold (the doc's formula; per unit)
         overall_aov = curated_df.agg(
-            sp_round(sp_sum("TOTAL_SALES") / sp_sum("UNITS_SOLD"), 2).alias("AOV")
+            sp_round(sp_sum("TOTAL_SALES") / sp_count("*"), 2).alias("AOV"),
+            sp_round(sp_sum("TOTAL_SALES") / sp_sum("UNITS_SOLD"), 2).alias("AVG_REVENUE_PER_UNIT"),
         )
         overall_aov.write.mode("overwrite").save_as_table("AOV_OVERALL")
 
         aov_by_region = curated_df.group_by("REGION").agg(
-            sp_round(sp_sum("TOTAL_SALES") / sp_sum("UNITS_SOLD"), 2).alias("AOV")
+            sp_round(sp_sum("TOTAL_SALES") / sp_count("*"), 2).alias("AOV"),
+            sp_round(sp_sum("TOTAL_SALES") / sp_sum("UNITS_SOLD"), 2).alias("AVG_REVENUE_PER_UNIT"),
         )
         aov_by_region.write.mode("overwrite").save_as_table("AOV_BY_REGION")
 

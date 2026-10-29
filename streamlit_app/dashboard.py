@@ -95,14 +95,16 @@ st.caption("Product performance, regional trends, and buying patterns")
 
 total_revenue = filtered["total_sales"].sum()
 total_units = filtered["units_sold"].sum()
-aov = total_revenue / total_units if total_units else 0
 n_transactions = len(filtered)
+aov = total_revenue / n_transactions if n_transactions else 0
+rev_per_unit = total_revenue / total_units if total_units else 0
 
-k1, k2, k3, k4 = st.columns(4)
+k1, k2, k3, k4, k5 = st.columns(5)
 k1.metric("Total Revenue", f"${total_revenue:,.0f}")
 k2.metric("Total Units Sold", f"{total_units:,}")
 k3.metric("Average Order Value", f"${aov:,.2f}")
-k4.metric("Transactions", f"{n_transactions:,}")
+k4.metric("Avg Revenue per Unit", f"${rev_per_unit:,.2f}")
+k5.metric("Transactions", f"{n_transactions:,}")
 
 st.divider()
 
@@ -189,11 +191,11 @@ st.dataframe(uvr, use_container_width=True, hide_index=True)
 
 st.header("5. Average Order Value (AOV)")
 aov_region = filtered.groupby("region", as_index=False).agg(
-    total_revenue=("total_sales", "sum"), total_units=("units_sold", "sum")
+    total_revenue=("total_sales", "sum"), transactions=("total_sales", "size")
 )
-aov_region["aov"] = (aov_region["total_revenue"] / aov_region["total_units"]).round(2)
+aov_region["aov"] = (aov_region["total_revenue"] / aov_region["transactions"]).round(2)
 fig = px.bar(aov_region.sort_values("aov", ascending=False), x="region", y="aov",
-             title="Average Order Value by Region", text_auto=".2f")
+             title="Average Order Value by Region (revenue per transaction)", text_auto=".2f")
 st.plotly_chart(fig, use_container_width=True)
 
 st.caption("Retail Sales Performance Analysis — built with Streamlit + Snowpark")

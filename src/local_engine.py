@@ -143,18 +143,34 @@ def units_vs_revenue(df: pd.DataFrame) -> pd.DataFrame:
 
 def average_order_value(df: pd.DataFrame) -> dict:
     """
-    5.5 Average Order Value: total revenue / total units sold.
-    Returns overall AOV plus breakdowns by region and product.
+    5.5 Order value metrics. Two distinct measures, both reported:
+
+      aov                  = total revenue / number of transactions
+                             (true Average Order Value: what one order is worth)
+      avg_revenue_per_unit = total revenue / total units sold
+                             (the formula given in the requirements doc; this is
+                             average selling price per unit, NOT per order)
+
+    Returns overall values plus breakdowns by region and product.
     """
-    overall = round(df["total_sales"].sum() / df["units_sold"].sum(), 2)
+    n_transactions = len(df)
+    overall = {
+        "aov": round(df["total_sales"].sum() / n_transactions, 2),
+        "avg_revenue_per_unit": round(df["total_sales"].sum() / df["units_sold"].sum(), 2),
+    }
 
     def _aov_by(group_col: str) -> pd.DataFrame:
         grouped = df.groupby(group_col).agg(
-            total_revenue=("total_sales", "sum"), total_units=("units_sold", "sum")
+            total_revenue=("total_sales", "sum"),
+            total_units=("units_sold", "sum"),
+            transactions=("total_sales", "size"),
         )
-        grouped["aov"] = (grouped["total_revenue"] / grouped["total_units"]).round(2)
+        grouped["aov"] = (grouped["total_revenue"] / grouped["transactions"]).round(2)
+        grouped["avg_revenue_per_unit"] = (
+            grouped["total_revenue"] / grouped["total_units"]
+        ).round(2)
         return (
-            grouped[["aov"]]
+            grouped[["aov", "avg_revenue_per_unit"]]
             .reset_index()
             .sort_values("aov", ascending=False)
             .reset_index(drop=True)

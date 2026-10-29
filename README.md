@@ -126,18 +126,26 @@ Product C's revenue-per-unit is also the highest — its lead isn't just
 volume, it commands a better price too.
 
 **5.5 Average Order Value**
-Overall AOV: **$52.20**
 
-| Region | AOV |
-|---|---|
-| North | $63.03 |
-| South | $52.79 |
-| West | $51.11 |
-| East | $41.53 |
+Two distinct measures are reported. The requirements doc defines "AOV" as
+total revenue ÷ total units sold, but that is average revenue *per unit*,
+not per order, so it is labeled as such here and true AOV (revenue ÷
+transactions) is reported alongside it.
 
-North doesn't just sell more total volume — each unit there sells for
-~52% more on average than in East, which is worth digging into (pricing,
-product mix, or promotions may differ by region).
+- **AOV (revenue per transaction): $527.25** ($52,725 ÷ 100 transactions)
+- **Average revenue per unit: $52.20** ($52,725 ÷ 1,010 units, the doc's formula)
+
+| Region | AOV (per transaction) | Avg revenue per unit |
+|---|---|---|
+| North | $643.38 | $63.03 |
+| South | $571.91 | $52.79 |
+| West | $492.84 | $51.11 |
+| East | $406.61 | $41.53 |
+
+North leads on both measures: its orders are worth ~58% more than East's
+($643 vs. $407) and each unit sells for ~52% more ($63 vs. $42), which is
+worth digging into (pricing, product mix, or promotions may differ by
+region). Regional rankings are the same under either measure.
 
 ## 6. Deliverables checklist (Step 7)
 
