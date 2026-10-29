@@ -37,7 +37,7 @@ sales.csv --> [S3: raw landing zone] --> [Snowflake / Snowpark: transform + aggr
 | Transformation | **Snowflake + Snowpark (Python)** | The requirement was "transformations must be in Snowflake" and "entire logic in Python." Snowpark gives a pandas-like DataFrame API that compiles to SQL and executes inside the Snowflake warehouse (pushdown), so we get Python ergonomics without pulling data out of the warehouse or hand-writing SQL strings. It also scales past what a laptop/pandas job could handle. |
 | Orchestration | **Python (`pipeline.py`)** | A single, testable entry point that sequences extract → load → transform → metrics, with structured logging and exceptions at every step instead of a notebook that fails silently. |
 | Dashboard | **Streamlit (in Snowflake)** | Explicitly required instead of a BI tool. Streamlit-in-Snowflake queries curated tables in place (`get_active_session()`), so the dashboard has zero data egress and no separate hosting/auth to manage. |
-| Local dev/demo engine | **pandas + matplotlib/Plotly** | Snowflake/AWS accounts aren't available in every environment (including this session). `local_engine.py` mirrors the exact same clean/derive/aggregate logic in pandas so the pipeline and dashboard are fully runnable and demoable without cloud credentials, and so the transformation logic can be unit-tested quickly before trusting it in Snowpark. |
+| Local dev/demo engine | **pandas + matplotlib/Plotly** | Snowflake/AWS accounts aren't available in every environment (CI, a fresh laptop). `local_engine.py` mirrors the exact same clean/derive/aggregate logic in pandas so the pipeline and dashboard are fully runnable and demoable without cloud credentials, and so the transformation logic can be unit-tested quickly before trusting it in Snowpark. |
 
 ## 3. Project layout
 
@@ -60,7 +60,7 @@ retail_sales_analysis/
 
 ## 4. Running it
 
-**Local (no cloud account needed — this is what was run in this session):**
+**Local (no cloud account needed):**
 ```bash
 pip install -r requirements.txt
 python src/pipeline.py --engine local
