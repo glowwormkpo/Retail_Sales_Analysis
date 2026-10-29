@@ -153,4 +153,8 @@ region). Regional rankings are the same under either measure.
 - [x] Setup configuration — `.env.example`, `requirements.txt`
 - [x] Final dashboard — `streamlit_app/dashboard.py`
 - [x] Presentation explaining the work and the "why" behind each tech
-      choice — `Retail_Sales_Performance_Analysis.pptx`
+      choice — `presentation/Retail_Sales_Performance_Analysis.pptx`
+
+## Project history
+
+The commits are the project's six saved versions (July 15 to October 21, 2026), committed in order in October 2026. Versions 1–4 were reconstructed from the final files by reversing the recorded edits; their file sizes match the originals as delivered, but no original copy survived for a byte-for-byte check. Versions 5 and 6 are exact copies. The original July versions of the presentation deck and the pre-fix AOV chart were overwritten and are not included.
