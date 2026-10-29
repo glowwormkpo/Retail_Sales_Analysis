@@ -13,6 +13,7 @@ import os
 from dataclasses import dataclass, field
 
 from dotenv import load_dotenv
+load_dotenv()
 
 # Load variables from a .env file (in the current working directory, or any
 # parent directory) into the process environment. Safe to call even if no
