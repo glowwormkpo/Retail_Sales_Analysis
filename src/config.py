@@ -12,6 +12,14 @@ real values, or export the variables in your shell / orchestrator.
 import os
 from dataclasses import dataclass, field
 
+from dotenv import load_dotenv
+
+# Load variables from a .env file (in the current working directory, or any
+# parent directory) into the process environment. Safe to call even if no
+# .env file exists -- real environment variables (e.g. set by CI/CD) always
+# take precedence and are never overwritten.
+load_dotenv()
+
 
 @dataclass(frozen=True)
 class AWSConfig:
